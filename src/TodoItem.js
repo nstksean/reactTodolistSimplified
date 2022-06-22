@@ -18,6 +18,8 @@ const TodoContent = styled.div`
 color:black;
 font-size:16px;
 
+${props=> props.isDone && `
+text-decoration:line-through`}
 `
 const TodoButtonWrapper=styled.div`
 display:flex;
@@ -27,18 +29,29 @@ padding:8px 16px;
 border: 1px solid black;`
 
 const Button=styled.button`
+&:hover{
+    color:red;
+}
 `
 const RedButton=styled.button`
 color:red;
 `
-function TodoItem({className,todo}) {
+
+function TodoItem({className,todo,handleDeleteTodo,handleToggleIsDone}) {
+    const handleToggleClick =() =>{
+        handleToggleIsDone(todo.id)
+    }
   return ( 
 <div>
 <TodoItemWrapper className={className} data-todo-id={todo.id}>
-    <TodoContent>{todo.content}</TodoContent>
+    <TodoContent isDone={todo.isDone} >{todo.content}</TodoContent>
     <TodoButtonWrapper>
-        <Button>已完成</Button>
-        <RedButton>刪除</RedButton>
+        <Button onClick ={handleToggleClick}>
+            {todo.isDone ? '已完成':'未完成'}
+        </Button>
+        <RedButton onClick={()=>{
+            handleDeleteTodo(todo.id)
+        }}>刪除</RedButton>
     </TodoButtonWrapper>
 </TodoItemWrapper>
 </div>);
