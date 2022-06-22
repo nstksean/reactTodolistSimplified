@@ -41,17 +41,18 @@ function TodoItem({className,todo,handleDeleteTodo,handleToggleIsDone}) {
     const handleToggleClick =() =>{
         handleToggleIsDone(todo.id)
     }
+    const handleDeleteClick= () => {
+        handleDeleteTodo(todo.id)
+    }
   return ( 
 <div>
 <TodoItemWrapper className={className} data-todo-id={todo.id}>
     <TodoContent isDone={todo.isDone} >{todo.content}</TodoContent>
     <TodoButtonWrapper>
         <Button onClick ={handleToggleClick}>
-            {todo.isDone ? '已完成':'未完成'}
+            {todo.isDone ? '未完成':'已完成'}
         </Button>
-        <RedButton onClick={()=>{
-            handleDeleteTodo(todo.id)
-        }}>刪除</RedButton>
+        <RedButton onClick={handleDeleteClick}>刪除</RedButton>
     </TodoButtonWrapper>
 </TodoItemWrapper>
 </div>);
