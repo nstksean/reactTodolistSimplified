@@ -1,11 +1,42 @@
 import './App.css';
 import styled, { createGlobalStyle } from 'styled-components';
-import React from 'react';
+import React, { Fragment } from 'react';
 import Counter from './Counter';
 import TodoItem from './TodoItem';
 import { useState, useRef } from 'react';
+import { useEffect } from 'react';
 
 
+// [{
+//   id: id.current,
+//   content: value,
+//   isDone: false,
+// }, ...todos]
+
+// [{
+//   id: id.current,
+//   content: value,
+//   isDone: false,
+// },
+// {
+//   id: id.current,
+//   content: value,
+//   isDone: false,
+// },]
+
+
+// const checkd = (text) => {
+//   switch (text) {
+//     case 'completed':
+//       return true
+//     case 'in pro':
+//       return true
+
+
+//     default:
+//       break;
+//   }
+// }
 
 function App() {
 
@@ -15,18 +46,32 @@ function App() {
   ])
 
   const [value, setValue] = useState('')
-  const id = useRef(3)
+  // const idRef = useRef(3)
 
   const handleButtonClick = (event) => {
     console.log('event', event)
     event.preventDefault()
-    setTodos([{
-      id: id.current,
-      content: value,
-      isDone: false,
-    }, ...todos])
+
+    // const newValue = [{
+    //   id: id.current,
+    //   content: value,
+    //   isDone: false,
+    // }, ...todos]
+    // setTodos(newValue)
+    // id.current++
+
+
+    setTodos(prev => {
+      console.log('sd', prev.length)
+      return [{
+        id: prev.length + 1,
+        content: value,
+        isDone: false,
+      }, ...prev]
+    })
+
+
     setValue('')
-    id.current++
   }
 
   const handleInputChange = (e) => {
@@ -37,20 +82,37 @@ function App() {
     setTodos(todos.filter(todo => todo.id !== id))
   }
 
+
   const handleToggleIsDone = id => {
-    setTodos(todos.map(todo => {
+
+    // replaces 1 element at index 4
+    // setTodos(prevValue => {
+    //   prevValue.splice(0, 1, {
+    //     "id": 5,
+    //     "content": "",
+    //     "isDone": false
+    //   });
+    //   console.log('prevValue', prevValue)
+    //   console.log(' [...prevValue]', [...prevValue])
+    //   return [...prevValue]
+    // })
+
+
+    const changeValue = todos.map(todo => {
       if (todo.id !== id) return todo
+
       return {
         ...todo,
         isDone: !todo.isDone
       }
-    }))
+    })
+    setTodos(changeValue)
   }
 
   return (
     <div className="App">
       <div> <Counter /> </div>
-
+      <div onClick={() => console.log(todos)}>d</div>
       <form onSubmit={handleButtonClick}>
         <input
           type="text"
@@ -62,12 +124,27 @@ function App() {
         <button onClick={handleButtonClick}>Add todo</button>
       </form>
 
+
+      {/* <div className={ isShow ? 'show' : ''}></div> */}
       {
-        todos.map(todo => <TodoItem key={todo.id} todo={todo}
-          handleDeleteTodo={handleDeleteTodo} handleToggleIsDone={handleToggleIsDone} />)
+        todos.map(todo =>
+          //todo
+          <React.Fragment key={todo.id} >
+            {JSON.stringify(todo)}
+          </React.Fragment>
+        )
+      }
+      {todos.length}
+
+      {
+        todos.map((todo, idx) =>
+          <TodoItem key={todo.id} todo={todo} idx={idx} setTodos={setTodos}
+            handleDeleteTodo={handleDeleteTodo} handleToggleIsDone={handleToggleIsDone} />
+        )
+
       }
 
-    </div>
+    </div >
   );
 }
 
