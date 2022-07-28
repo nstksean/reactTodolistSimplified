@@ -45,6 +45,7 @@ function TodoItem({ className, todo, idx
     const handleDeleteClick = () => {
         handleDeleteTodo(todo.id)
     }
+
     return (
         <div>
             <TodoItemWrapper className={className} data-todo-id={todo.id}>
